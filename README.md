@@ -16,3 +16,9 @@ run ./build/SpacePixel
 
 Press keys up, down, left and right to move the ship<br/>
 press key "x" to shoot and try to avoid the meteor and the enemies
+
+
+## Assets used for this game
+
+https://www.gamedevmarket.net/asset/spaceships-asset-pack/<br/>
+https://gamesupply.itch.io/massive-weapon-package
