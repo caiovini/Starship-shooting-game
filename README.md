@@ -7,7 +7,7 @@ Small starship shooting gamed developed in c++ using sdl2 library
 
 ## Instructions
 
-Make sure you have sdl2 installed<br/>
+Make sure you have sdl2 and cmake installed, make sure you also have the SDL2_Image and SDL2_ttf<br/>
 type ./buid.sh<br/>
 run ./build/SpacePixel
 
