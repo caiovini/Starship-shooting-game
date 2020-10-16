@@ -3,7 +3,7 @@ Small starship shooting gamed developed in c++ using sdl2 library
 
 ## Demo
 
-![alt text](https://github.com/caiovini/Starship-shooting-game/blob/master/demo.gif)
+![alt text](https://github.com/caiovini/Starship-shooting-game/blob/main/demo.gif)
 
 ## Instructions
 
