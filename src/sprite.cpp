@@ -27,10 +27,10 @@ void Meteor::render(SDL_Rect darea){
 
     if(is_rendered){
 
-        if(angle == 360)
+        if(angle == 360) // Rotate meteor
             angle = 0.0f;
         
-        angle += 1.0f;
+        angle += 1.0f; 
 
         SDL_RenderCopyEx(renderer, meteorTexture, nullptr , &meteorRect , angle , nullptr , SDL_FLIP_NONE);
 
@@ -75,7 +75,7 @@ bool Meteor::checkCollisionMeteor(SDL_Rect objectTested){
 
     if(checkCollision(objectTested , tempRect)){
 
-        this->destroy();
+        this->destroy(); // Case collision, destroy it
         return true;
     }
 
@@ -139,7 +139,7 @@ void SpaceShip::shoot(){
     ls.spriteLaser = SDL_CreateTextureFromSurface(renderer, laserSurface);
 
     SDL_FreeSurface(laserSurface);
-    shoots.push_back(ls);
+    shoots.push_back(ls); // Add new laser to the list
 
 }
 
@@ -157,7 +157,7 @@ void SpaceShip::render(){
             SDL_RenderCopy(renderer, shoots[i].spriteLaser , nullptr , &shoots[i].shootRect);
             shoots[i].shootRect.y -= 2;
             if(shoots[i].shootRect.y < -10)
-                shoots.erase( shoots.begin() + i);
+                shoots.erase( shoots.begin() + i); // Lase beam is out of screen boundaries
 
         }
     }
@@ -213,6 +213,7 @@ void Enemy::setup(){
 
     laserSurface = IMG_Load(laser.c_str());
 
+    // Render each enemy
     for (int i = 0; i < numberOfEnemies; i ++){
 
         enemySurface = IMG_Load(enemyImages[i].c_str());
@@ -252,14 +253,14 @@ void Enemy::render(){
             enemies[i].enemyRect.y ++;
 
         if(enemies[i].enemyLifebar.w > 0){
-            SDL_RenderCopy(renderer, enemies[i].textureEnemy , nullptr , &enemies[i].enemyRect);
+            SDL_RenderCopy(renderer, enemies[i].textureEnemy , nullptr , &enemies[i].enemyRect); // Render if enemy has life
 
         }else{
 
             enemies[i].enemyRect.x = -20;
             enemies[i].enemyRect.y = -20;
             numberOfDeads ++;
-            if(numberOfDeads == numberOfEnemies){
+            if(numberOfDeads == numberOfEnemies){ // If all enemies are dead, setup them all over again
                 this->setup();
                 break;    
             }

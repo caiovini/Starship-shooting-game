@@ -1,6 +1,7 @@
 
 #include "screen.h"
 
+// Constructor
 
 Screen::Screen(int width , int height){
 
@@ -63,7 +64,11 @@ void Screen::handle_stars(std::vector<int> starsX , std::vector<int> &starsY , S
 
     
 }
-
+/*
+    Render menu, so user can choose ship
+    This function returns true to indicate that the game will be rendered
+    In case user presses key escape the app closes
+*/
 bool Screen::menu(){
 
     Log *log = new Log();
@@ -152,7 +157,7 @@ bool Screen::menu(){
     selector.x = shipRect[chooser].x + 50;
     selector.y = shipRect[chooser].y + shipRect[chooser].h;
     
-
+    // Load each ship
     SDL_FreeSurface(textSurface);
     SDL_FreeSurface(backgroundSurface);
     SDL_FreeSurface(shipsSurface[0]);
@@ -164,7 +169,7 @@ bool Screen::menu(){
 
     TTF_Quit();
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    int opacity = 5;
+    int opacity = 5; // This is used to fade out
     int chooserCounter = 0;
     bool enterPressed = false;
 
@@ -246,7 +251,7 @@ bool Screen::menu(){
                     
             } else if ( event.type == SDL_QUIT){
                 log->showLog(log->info , "Quit on menu");  
-                return 0;
+                return 0; // Return false
  
             } else if( event.type == SDL_KEYUP ){
                 continue;
@@ -265,9 +270,10 @@ bool Screen::menu(){
     SDL_DestroyTexture(shipsTexture[3]);
     SDL_DestroyTexture(shipsTexture[4]);
     SDL_DestroyTexture(shipsTexture[5]);
-    return 1;
+    return 1; // Return true
 }
 
+// Generate a score text at the top of the screen
 SDL_Texture* generateScoreText(TTF_Font* font , SDL_Renderer* renderer , int points){
 
      std::string score = "Score: ";
@@ -280,9 +286,14 @@ SDL_Texture* generateScoreText(TTF_Font* font , SDL_Renderer* renderer , int poi
     return scoreTextTexture;
 }
 
+/*
+    Render the game
+    This is the main game func 
+*/
+
 void Screen::render(){
 
-    SDL_Rect darea;
+    SDL_Rect darea;             // Area of the screen
     SDL_Rect lifebarRect;
     SDL_Rect lifeTextRect;
     SDL_Rect scoreTextRect;
@@ -299,6 +310,7 @@ void Screen::render(){
 
     std::vector<std::string> files;
 
+    // What ship user has chosen
     switch (chooser){
     case 0:
         spaceship = new SpaceShip(renderer , ship01);
@@ -340,11 +352,11 @@ void Screen::render(){
     int points = 0;
     TTF_Init();
 
-    TTF_Font *verdanaFont = TTF_OpenFont("fonts/FreeMonoOblique.ttf", 128);
+    TTF_Font *monoOblique = TTF_OpenFont("fonts/FreeMonoOblique.ttf", 128);
     SDL_Color whiteTextColor = { 255, 255, 255, 200 };
-    SDL_Surface *lifeTextSurface = TTF_RenderText_Solid(verdanaFont, "Life", whiteTextColor);
+    SDL_Surface *lifeTextSurface = TTF_RenderText_Solid(monoOblique, "Life", whiteTextColor);
     SDL_Texture *lifeTextTexture = SDL_CreateTextureFromSurface(renderer, lifeTextSurface);
-    SDL_Surface *gameOverTextSurface = TTF_RenderText_Solid(verdanaFont, "GAME OVER", whiteTextColor);
+    SDL_Surface *gameOverTextSurface = TTF_RenderText_Solid(monoOblique, "GAME OVER", whiteTextColor);
     SDL_Texture *gameOverTextTexture = SDL_CreateTextureFromSurface(renderer, gameOverTextSurface);
     
     SDL_FreeSurface(lifeTextSurface);
@@ -371,11 +383,16 @@ void Screen::render(){
     gameOverTextRect.h = 100;
 
     
-    SDL_Texture* scoreTextTexture = generateScoreText(verdanaFont , renderer , points);
+    SDL_Texture* scoreTextTexture = generateScoreText(monoOblique , renderer , points);
     bool isKeyDown = false , is_running = true , gameOver = false;;
     unsigned int opacity = 255;
     unsigned int blinkSpaceship = 0;
 
+    /*
+        moveCycle: the period that the ship moves even after user releases the moving keys
+        shootingCycle: the amount of space the lasers move 
+        keyPressed: what key has been pressed
+    */
     unsigned int moveCycle = 0 , shootingCycle = 0 , keyPressed = 0;
     while( is_running ){
         
@@ -462,9 +479,12 @@ void Screen::render(){
 
         SDL_RenderClear(renderer);
         
+        // Generate stars
         this->handle_stars(starsX , starsY , darea);
+
+        // Render meteors
         meteor->render(darea);
-        if(!blinkSpaceship){
+        if(!blinkSpaceship){ // blinkSpaceship: in case ship is hit
             spaceship->render();
             if(meteor->checkCollisionMeteor(spaceship->shipRect) || enemy->checkCollisionEnemy(spaceship->shipRect)){
                 lifebarRect.w -= 10;
@@ -488,7 +508,7 @@ void Screen::render(){
             if(enemy->checkCollisionEnemy(spaceship->shoots[i].shootRect)){
                 spaceship->shoots.erase( spaceship->shoots.begin() + i);
                 points ++;
-                scoreTextTexture = generateScoreText(verdanaFont , renderer , points);
+                scoreTextTexture = generateScoreText(monoOblique , renderer , points);
                 break;
             }
 
